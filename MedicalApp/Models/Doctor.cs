@@ -13,48 +13,47 @@ namespace MedicalApp.Models
         public int NrOfPatients { get; set; }
         public List<string> Specialization = new List<string>();
 
-        public List<Patient> Patients { get; set; }
+        public List<Patient> Patients = new List<Patient>();
 
         public Doctor(string name)
         {
             Name = name;
         }
+        //Un doctor cu specializare incearca sa isi adauge un pacient
+        //daca pacientul are nevoie de alta specializare va da eroare "Needs a different specialization"
+        //daca nu mai sunt locuri la doctor va da eroare cu "No more slots left"
+        //daca este primul pacient adaugat va da mesajul "First patient added"
+        //daca este oricare urmatorul  va fi un mesaj simplu de "Patient added"
         public string AddPatientToList(Patient patient)
         {
+            if (Patients.Count < NrOfPatients)
+                return "No more slots left";
             if (Specialization.Contains(patient.ReasonForIntenation))
             {
-                if (Patients.Count == 0)
+                Patients.Add(patient);
+                if (Patients.Count == 1)
                 {
-                    Patients.Add(patient);
-                    NrOfPatients = 0;
                     return "First patient added";
-                }
-
-                if (Patients.Count >= 1)
-                {
-                    Patients.Add(patient);
-                    NrOfPatients++;
-                    return "Patient added";
-                }
-
-                return "No more slots left at this doctor";
+                }  
+                return "Patient added";
             }
             else
             {
-                return "The patient could not have been added";
+                return "Needs a different specialization";
             }
         }
 
+        //Adauge o specializare la Doctor
         public string AddSpecialization(string specialization)
         {
-            if (specialization.Length > 0)
+            if (specialization.Length > 5)
             {
                 Specialization.Add(specialization);
                 return specialization;
             }
             else
             {
-                return "Specialization can't be empty";
+                return "Lenght can't be less then 5";
             }
         }
 
